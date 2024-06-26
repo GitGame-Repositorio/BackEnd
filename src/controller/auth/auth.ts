@@ -15,7 +15,15 @@ export const register = async (req: Request, res: Response) => {
   };
   const user = await db.user.create({
     data: { userLogged: { create: { ...data } } },
-    include: { userLogged: { select: { email: true, name: true } } },
+    include: {
+      userLogged: {
+        select: {
+          email: true,
+          name: true,
+          admin: { select: { privilegies: true } },
+        },
+      },
+    },
   });
   res.status(201).json({ ...user, ...user.userLogged, userLogged: undefined });
 };
