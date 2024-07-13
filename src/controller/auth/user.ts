@@ -3,17 +3,23 @@ import bcrypt from "bcrypt";
 import { db } from "../../db";
 
 const include = {
-  userLogged: { select: { email: true, name: true } },
-  anonymous: true,
+  userLogged: {
+    select: {
+      email: true,
+      name: true,
+      admin: { select: { privilegies: true } },
+    },
+  },
 };
 
 const objResponse = (user) => {
-  const type = !!user.anonymous ? "anonymous" : "logged";
+  const type = !user.userLogged ? "anonymous" : "logged";
   return {
     ...user,
     ...user.userLogged,
     userLogged: undefined,
     anonymous: undefined,
+    admin: user?.userLogged?.admin?.privilegies,
     type,
   };
 };

@@ -29,9 +29,7 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const registerAnonymous = async (req: Request, res: Response) => {
-  const user: Partial<User> = await db.user.create({
-    data: { anonymous: { create: {} } },
-  });
+  const user: Partial<User> = await db.user.create({ data: {} });
   const token = jwt.sign({ sub: user.id, type: "anonymous" }, JWT_SECRET, {
     algorithm: "HS256",
   });
