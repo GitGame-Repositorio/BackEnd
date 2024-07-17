@@ -1,6 +1,6 @@
 import { registerAnonymous } from "../../../src/controller/auth/auth";
 import { db } from "../../../src/db";
-import { expectUser } from "./config";
+import { expectUser } from "./configTestsAuth";
 
 describe("Tests for controller create user anonymous", () => {
   let req, res;

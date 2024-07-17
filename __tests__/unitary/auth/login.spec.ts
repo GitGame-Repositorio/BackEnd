@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
 import { db } from "../../../src/db";
-import { expectUser } from "./config";
+import { expectUser } from "./configTestsAuth";
 import { login } from "../../../src/controller/auth/auth";
 import { msgIsMissing } from "../config";
 

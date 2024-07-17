@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { db } from "../../../src/db";
 import { register } from "../../../src/controller/auth/auth";
 import { msgInvalidFormat, msgIsMissing, msgUniqueConst } from "../config";
-import { expectUser } from "./config";
+import { expectUser } from "./configTestsAuth";
 
 describe("Tests for controller create user logged", () => {
   let req, res;
