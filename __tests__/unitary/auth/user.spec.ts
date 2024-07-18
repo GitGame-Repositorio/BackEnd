@@ -12,6 +12,7 @@ import {
   testUserIdInvalid,
   testUserIdNull,
 } from "../config";
+
 import {
   destroy,
   getById,
@@ -47,7 +48,7 @@ describe("Tests for controller user", () => {
 
   describe("Tests for update image", () => {
     // Successfully updates user image when valid userId and file are provided
-    it.only("should update user image when valid userId and file are provided", async () => {
+    it("should update user image when valid userId and file are provided", async () => {
       const req = {
         userId,
         file: { filename: "profile.jpg" },
@@ -83,17 +84,17 @@ describe("Tests for controller user", () => {
     });
 
     // When an invalid user ID is provided, the function should throw an error
-    it.skip("should throw an error when user ID is invalid", async () => {
+    it("should throw an error when user ID is invalid", async () => {
       testUserIdNull(getById);
     });
 
     // When an ID not exists is provided, the function should throw an error
-    it.skip("should throw an error when user ID not exists", async () => {
+    it("should throw an error when user ID not exists", async () => {
       testUserIdInvalid(getById);
     });
 
     // Successfully retrieves admin user by ID and returns the correct response
-    it.skip("should return user admin data when user ID exists", async () => {
+    it("should return user admin data when user ID exists", async () => {
       const email = `${uuid()}@email.com`;
       const user = await createUser({ email, password });
       await db.admin.create({

@@ -13,6 +13,8 @@ export const msgNotFound = (value) => `No ${value} found`;
 export const regexUUID =
   /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[4][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
 
+export const randomEmail = () => `${uuid()}@test.com`;
+
 export const mockRes = () => {
   return {
     status: jest.fn().mockReturnThis(),
