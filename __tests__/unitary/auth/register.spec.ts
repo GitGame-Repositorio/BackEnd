@@ -1,11 +1,17 @@
 import { Request, Response } from "express";
 import { db } from "../../../src/db";
 import { register } from "../../../src/controller/auth/auth";
-import { msgInvalidFormat, msgIsMissing, msgUniqueConst } from "../config";
+import {
+  mockRes,
+  msgInvalidFormat,
+  msgUniqueConst,
+} from "../config";
 import { expectUser } from "./configTestsAuth";
+import { msgIsMissing } from "../../../src/services/objError";
 
 describe("Tests for controller create user logged", () => {
   let req, res;
+  const password = "N%EF$reWre2";
 
   beforeEach(async () => {
     await db.user.deleteMany();
@@ -14,25 +20,22 @@ describe("Tests for controller create user logged", () => {
       body: {
         email: expectUser.email,
         name: expectUser.name,
-        password: "secret",
+        password,
       },
     } as Request;
 
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    } as unknown as Response;
-
+    res = mockRes();
     jest.clearAllMocks();
   });
 
   // successfully creates a new user with valid data
   it("should create a new user when valid data is provided", async () => {
     await register(req, res);
-    const obj = res.json.mock.calls[0][0];
 
     expect(res.status).toHaveBeenCalledWith(201);
-    expect(obj).toMatchObject(expectUser);
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining(Object.create({ ...expectUser, name: null }))
+    );
   });
 
   // not create user already exists
@@ -46,10 +49,9 @@ describe("Tests for controller create user logged", () => {
     });
     await expect(register(req, res)).rejects.toThrow(msgUniqueConst("email"));
   });
-  2;
 
   // handles missing password in the request body
-  it("should return 400 error when password is missing", async () => {
+  it("should throw error when password is missing", async () => {
     const newReq = {
       body: {
         email: "test@example.com",

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { db } from "../../../src/db";
 import { expectUser } from "./configTestsAuth";
 import { login } from "../../../src/controller/auth/auth";
-import { msgIsMissing } from "../config";
+import { msgIsMissing } from "../../../src/services/objError";
 
 describe("Tests for controller login", () => {
   let res;

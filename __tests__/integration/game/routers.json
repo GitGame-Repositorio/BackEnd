@@ -1,13 +1,13 @@
 [
   {
-    "router": "capter",
+    "router": "chapter",
     "data": { "title": "Rustic Cotton Tuna" },
     "update": { "title": "Title update" }
   },
   {
     "router": "level",
     "data": {
-      "id_capter": "{{ID}}",
+      "id_chapter": "{{ID}}",
       "title": "Rustic Rubber Gloves"
     },
     "update": { "title": "Title update" }
@@ -15,7 +15,7 @@
   {
     "router": "exam",
     "data": {
-      "id_capter": "{{ID}}",
+      "id_chapter": "{{ID}}",
       "title": "Fantastic Metal Pizza",
       "description": "Illum ipsum quod sapiente. Neque officiis veritatis veritatis minima sed. Est et quis alias corrupti animi sunt consequuntur suscipit in. Assumenda minus expedita officia tempora eum id quasi voluptatem."
     },

@@ -2,12 +2,12 @@
   {
     "router": "playerProgress",
     "data": {
-      "id_capter": "{{id_capter}}",
+      "id_chapter": "{{id_chapter}}",
       "id_user": "{{id_player}}"
     }
   },
   {
-    "router": "capterProgress",
+    "router": "chapterProgress",
     "data": {
       "id_player_progress": "{{id_playerProgress}}",
       "id_level": "{{id_level}}"
@@ -16,7 +16,7 @@
   {
     "router": "levelProgress",
     "data": {
-      "id_capter_progress": "{{id_capterProgress}}",
+      "id_chapter_progress": "{{id_chapterProgress}}",
       "id_orderLevel": "{{id_orderLevel}}"
     }
   }

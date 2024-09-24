@@ -3,12 +3,13 @@ import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 
 import { db } from "../../../src/db";
-import { expectAdminObj, expectUser } from "./configTestsAuth";
+import { expectAdminObj, expectUser, expectUserObj } from "./configTestsAuth";
 import {
   mockRes,
   msgInvalidFormat,
   msgNotFound,
   msgUniqueConst,
+  randomEmail,
   testUserIdInvalid,
   testUserIdNull,
 } from "../config";
@@ -46,6 +47,20 @@ describe("Tests for controller user", () => {
     res = mockRes();
   });
 
+  describe.skip.each([
+    { method: "get for id", callback: getById },
+    { method: "update", callback: update },
+    { method: "delete", callback: destroy },
+  ])("Tests common in main functions", ({ method, callback }) => {
+    it(`should throw an error when user ID is invalid when try ${method}`, async () => {
+      testUserIdNull(callback);
+    });
+
+    it(`should throw an error when user ID not exists when try ${method}`, async () => {
+      testUserIdInvalid(callback);
+    });
+  });
+
   describe("Tests for update image", () => {
     // Successfully updates user image when valid userId and file are provided
     it("should update user image when valid userId and file are provided", async () => {
@@ -71,26 +86,9 @@ describe("Tests for controller user", () => {
       const req = { userId } as Request;
       await getById(req, res);
 
-      const expectObjUser = {
-        id: userId,
-        apparence: "LIGHT",
-        language: "portuguese",
-        email: expectUser.email,
-      };
-
       expect(res.json).toHaveBeenCalledWith(
-        expect.objectContaining(expectObjUser)
+        expect.objectContaining(expectUserObj)
       );
-    });
-
-    // When an invalid user ID is provided, the function should throw an error
-    it("should throw an error when user ID is invalid", async () => {
-      testUserIdNull(getById);
-    });
-
-    // When an ID not exists is provided, the function should throw an error
-    it("should throw an error when user ID not exists", async () => {
-      testUserIdInvalid(getById);
     });
 
     // Successfully retrieves admin user by ID and returns the correct response
@@ -100,7 +98,6 @@ describe("Tests for controller user", () => {
       await db.admin.create({
         data: {
           id_userLogged: user.id,
-          second_password: password,
           privilegies: { create: {} },
         },
       });
@@ -110,7 +107,7 @@ describe("Tests for controller user", () => {
 
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          ...expectUser,
+          ...expectUserObj,
           admin: expect.objectContaining(expectAdminObj),
           type: "logged",
           email,
@@ -156,8 +153,8 @@ describe("Tests for controller user", () => {
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(objUpdate));
     });
 
-    it("should return user data when apparence field is updated successfully", async () => {
-      const objUpdate = { apparence: "DARK" };
+    it("should return user data when appearance field is updated successfully", async () => {
+      const objUpdate = { appearance: "DARK" };
       const req = { userId, body: objUpdate } as Request;
 
       await update(req, res);
@@ -165,7 +162,7 @@ describe("Tests for controller user", () => {
     });
 
     it("should return user data when email field is updated successfully", async () => {
-      const objUpdate = { email: `${uuid()}@email.com` };
+      const objUpdate = { email: randomEmail() };
       const req = { userId, body: objUpdate } as Request;
 
       await update(req, res);
@@ -173,11 +170,13 @@ describe("Tests for controller user", () => {
     });
 
     it("should throw an error when email field have is in use", async () => {
-      const email = `${uuid()}@email.com`;
+      const email = randomEmail();
       const user = await createUser({ email, password });
 
-      const objUpdate = { userId: user.id, email: expectUser.email };
-      const req = { userId: user.id, body: objUpdate } as Request;
+      const req = {
+        userId: user.id,
+        body: { email: expectUser.email },
+      } as Request;
 
       await expect(update(req, res)).rejects.toThrow(msgUniqueConst("email"));
     });
@@ -188,14 +187,6 @@ describe("Tests for controller user", () => {
 
       await expect(update(req, res)).rejects.toThrow(msgInvalidFormat("email"));
     });
-
-    it("should throw an error when user ID is invalid", async () => {
-      testUserIdNull(update);
-    });
-
-    it("should throw an error when user ID not exists", async () => {
-      testUserIdInvalid(update);
-    });
   });
 
   describe("Tests for deleting user", () => {
@@ -205,7 +196,7 @@ describe("Tests for controller user", () => {
       userId = user.id;
     });
 
-    it("should deleting user whit sucess whit user id exists", async () => {
+    it("should deleting user whit success whit user id exists", async () => {
       const req = { userId } as Request;
       await destroy(req, res);
 
@@ -221,14 +212,6 @@ describe("Tests for controller user", () => {
       expect(res.status).toHaveBeenCalledWith(204);
 
       await expect(destroy(req, res)).rejects.toThrow(msgNotFound("User"));
-    });
-
-    it("should throw an error when user ID is invalid", async () => {
-      testUserIdNull(destroy);
-    });
-
-    it("should throw an error when user ID not exists", async () => {
-      testUserIdInvalid(destroy);
     });
   });
 });

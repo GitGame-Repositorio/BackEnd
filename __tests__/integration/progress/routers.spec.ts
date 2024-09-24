@@ -58,18 +58,18 @@ const populateData = async (routers, id, idPlayer) => {
 
 const temp = [
   {
-    router: "capter",
+    router: "chapter",
     data: { title: "Rustic Cotton Tuna" },
     update: { title: "Title update" },
   },
   {
     router: "level",
     data: {
-      id_capter: "{{ID}}",
+      id_chapter: "{{ID}}",
       title: "Rustic Rubber Gloves",
     },
     update: { title: "Title update" },
-    dependencies: ["capter"],
+    dependencies: ["chapter"],
   },
 ];
 
@@ -133,7 +133,7 @@ describe.each(routers)(
     describe("Tests for routers using id", () => {
       beforeEach(async () => {
         await deleteData(router, id);
-        await createData(router, {...dataCreate, id});
+        await createData(router, { ...dataCreate, id });
       });
 
       it("Get one record successfully", async () => {
