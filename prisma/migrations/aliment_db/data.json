@@ -1,0 +1,378 @@
+{
+  "chapter": [
+    {
+      "id": "28149748-05c7-4795-8383-4fceb68fcbc6",
+      "title": "Conceitos Básicos",
+      "numberOrder": 1
+    },
+    {
+      "id": "42ef7763-5508-4bf7-8dd4-e5e6a4823528",
+      "title": "Branchs",
+      "numberOrder": 2
+    },
+    {
+      "id": "30721299-cf8b-46f0-ba51-22ba8e55b7e6",
+      "title": "Repositórios Remotos",
+      "numberOrder": 3
+    },
+    {
+      "id": "0c88d907-90fb-4c68-b1b3-27d8ee74c54b",
+      "title": "Extras",
+      "numberOrder": 4
+    }
+  ],
+  "level": [
+    {
+      "id": "5068028e-d499-4ca0-9f00-154ac301b1b9",
+      "id_chapter": "28149748-05c7-4795-8383-4fceb68fcbc6",
+      "title": "Entendo GIT",
+      "numberOrder": 1
+    },
+    {
+      "id": "879b23bb-2c5f-431d-92ac-ea9d37ca9fda",
+      "id_chapter": "28149748-05c7-4795-8383-4fceb68fcbc6",
+      "title": "Git Add",
+      "numberOrder": 2
+    },
+    {
+      "id": "42b3c273-8e61-4f7c-b35c-94a099631908",
+      "id_chapter": "28149748-05c7-4795-8383-4fceb68fcbc6",
+      "title": "Git Commit",
+      "numberOrder": 3
+    },
+    {
+      "id": "238181f2-c9e9-4294-ad51-c6d2bdbf3006",
+      "id_chapter": "28149748-05c7-4795-8383-4fceb68fcbc6",
+      "title": "Git Log",
+      "numberOrder": 4
+    },
+    {
+      "id": "58da88c5-5733-44f1-9464-57d60988e036",
+      "id_chapter": "28149748-05c7-4795-8383-4fceb68fcbc6",
+      "title": "Git Status",
+      "numberOrder": 5
+    },
+    {
+      "id": "b4dc3d05-221c-41df-9106-7b553e11307e",
+      "id_chapter": "42ef7763-5508-4bf7-8dd4-e5e6a4823528",
+      "title": "Git Branch",
+      "numberOrder": 1
+    },
+    {
+      "id": "0175f9e5-942c-4f77-b9c3-9440e338c82b",
+      "id_chapter": "42ef7763-5508-4bf7-8dd4-e5e6a4823528",
+      "title": "Git Merge e Git Rebase",
+      "numberOrder": 2
+    },
+    {
+      "id": "2faa30bb-5914-49e0-b152-9441f5469587",
+      "id_chapter": "42ef7763-5508-4bf7-8dd4-e5e6a4823528",
+      "title": "Git Cherry-Pick",
+      "numberOrder": 3
+    },
+    {
+      "id": "aed9a5f9-4e43-4482-8d82-888120cd3641",
+      "id_chapter": "30721299-cf8b-46f0-ba51-22ba8e55b7e6",
+      "title": "Repositórios Remotos e Locais",
+      "numberOrder": 1
+    },
+    {
+      "id": "2863896b-bbd0-4668-92b9-259d396cf333",
+      "id_chapter": "30721299-cf8b-46f0-ba51-22ba8e55b7e6",
+      "title": "Git Clone",
+      "numberOrder": 2
+    },
+    {
+      "id": "e771ae70-9d2b-4e83-a296-5bbed764f3b0",
+      "id_chapter": "30721299-cf8b-46f0-ba51-22ba8e55b7e6",
+      "title": "Git Pull e Git Push",
+      "numberOrder": 3
+    },
+    {
+      "id": "d6557bc4-fbe3-46dc-8ff9-81c2ecda203b",
+      "id_chapter": "0c88d907-90fb-4c68-b1b3-27d8ee74c54b",
+      "title": "Git Alias",
+      "numberOrder": 2
+    },
+    {
+      "id": "3496ec5a-691b-4dd5-98b6-7a5fa4fe7ab0",
+      "id_chapter": "0c88d907-90fb-4c68-b1b3-27d8ee74c54b",
+      "title": "Git Tag",
+      "numberOrder": 1
+    }
+  ],
+  "subject": [
+    {
+      "title": "O que é Git?",
+      "text": "Git é um sistema de controle de versão de arquivos. Através dele podemos desenvolver projetos na qual diversas pessoas podem contribuir simultaneamente no mesmo, editando e criando novos arquivos e permitindo que os mesmos possam existir sem o risco de suas alterações serem sobrescritas.",
+      "id_order_level": "1aab3adf-b3fd-4004-ab44-45490801492b"
+    },
+    {
+      "title": "Sistema de controle de versão?",
+      "text": "Sim, o sistema de controle de versão traz uma natureza bem utilitarista para um projeto, a ideia aqui é conter uma maquina do tempo, que permite visitar versões antigas de um arquivo, pode ser observada em diferentes locais, como atualmente até o google docs contem. Mas para o desenvolvimento de software é usada principalmente para salvar versões projeto, facilitando retornar facilmente a uma versão especifica se necessário ou até mesmo pegar um trecho de código ou arquivo anteriormente excluído ou modificado",
+      "id_order_level": "ff8baa23-3fdc-4250-bb39-830ff9dbcbfc"
+    },
+    {
+      "title": "O que tornar Git essencial de se aprender?",
+      "text": "O git é o mais famoso e utilizado gerenciador de versões para projetos, existente desde 2005 e criado por Linux Torvalds, famoso criador do Linux, atualmente é amplamente usado para criar software, por causa dos seus conceitos e seu funcionamento que trouxe uma grande vantagem sobre outros concorrentes para o gerecimento de versões, conceitos esses que iremos aprender mais nos próximos capítulos e leveis.",
+      "id_order_level": "3cb3b438-7870-482b-be53-6ff130f52f65"
+    },
+    {
+      "title": "O modelo descentralizado do Git",
+      "text": "A descentralização do Git trouxe uma revolução no controle de versão, permitindo que cada desenvolvedor tenha uma cópia completa do repositório com todo o histórico de mudanças, o que facilita o trabalho offline, melhora a segurança e cria backups naturais.\nO que é completamente diferente de antigamente em que continha uma natureza bem mais centralizada, algumas ferramentas dependiam de um servidor central, ao qual os desenvolvedores se conectavam a esse servidor para realizar mudanças no código das aplicações, isso acarretava diversos problemas, como a concorrência de uso, se ocorresse um erro no servidor era impossível ter contato com o código ou até mesmo se houvesse perda do projeto não era possível o recuperar facilmente.\nAs ferramentas mais utilizadas na época eram o CVS (Concurrent Versions System) e Subversion (SVN), ao qual não iremos falar por aqui, mas fica a título de curiosidade para caso queira pesquisar mais.",
+      "id_order_level": "aa00d974-a2c8-432e-9a5c-62f098c710d4"
+    },
+    {
+      "title": "Ciclo de vida de um arquivo",
+      "text": "Um dos conceitos mais importantes de se entender no Git é o ciclo de vida dos arquivos rastreados pelo git, consistindo em 3 status principais:\n* untracked: Arquivos não monitorados pelo git, geralmente arquivos adicionados antes de grava uma versão. \n* unmodified: Arquivos monitoradas, mas sem haver alterações.\n* modified: Arquivos modificados, mas sem estarem prontos para serem gravados.\n* staged: Arquivos que estão marcados para serem salvos nas versões.\nPara registrar e salvar esses arquivos é necessário utilizar dois comandos, ``git add`` e ``git commit``, ao qual iremos aprender mais na proxima fase",
+      "id_order_level": "c5283836-1f2b-4a2f-b3ea-0e2f69fc8adb"
+    },
+    {
+      "title": "Preparando arquivos",
+      "text": "O ``git add`` é um dos comandos mais usados e básicos, pode ser usado para dizer ao git que a modificação que você preparou pode ser salva e guardada no histórico. existe diferentes formas de utilizar o ``git add``, tanto apontando algum arquivo especifico, caminho ou uma simbologia comum de terminal para se referir a um tipo de arquivo",
+      "id_order_level": "03fb4909-27a3-45de-9f6a-9151f49eb41b"
+    },
+    {
+      "title": "Nome e caminhos de arquivos",
+      "text": "Nesse formato é simples, é só passar o exato caminho da pasta e nome do arquivo, tendo como referencia a pasta base do projeto, onde o git foi inicializado, exemplo:\n* git add index.js: Salvando pasta index na raiz do projeto\n* git add services/date.js, preparando o arquivo date dentro da pasta services\n* git add index.js service/date.js: adicionando os dois arquivos anteriores por apenas um comando",
+      "id_order_level": "d7686af8-cff1-4a9c-92fd-3775f4d60ece"
+    },
+    {
+      "title": "Símbolos",
+      "text": "Esse formato é o mesmo utilizado em terminais, se baseia em passar um simbolo como por exemplo o *, para tudo na pasta, e uni-lo com git add, exemplo:\n* git add *: Adicionando todas os arquivos na pasta atual\n* git add services/*.js: preparando todos arquivos .js dentro da pasta services\n* git add file?.js: para arquivos que começão com file e terminam com .js, mas em seu meio contenham qualquer valor",
+      "id_order_level": "daf2abad-d10b-496f-8c61-6bfb6174f4eb"
+    },
+    {
+      "title": "Flags",
+      "text": "Já nesse formato se usa flags dadas pelo próprio git para o comando add, como por exemplo:\n* git add --all: Faz o mesmo trabalho que o git add *, adiciona todos os arquivos na pasta\n* git add -u: prepara todos arquivos que foram modificados e excluídos (mas não os arquivos novos)\n* git add -A: prepara todos arquivos novos ou modificados (mas não os arquivos excluídos)",
+      "id_order_level": "cca8c3db-e126-42bf-97da-ec139e77d3e7"
+    },
+    {
+      "title": "Existe alguma diferença entre git add ., git add --all, git add *?",
+      "text": "Respondendo de forma curta, não existe nenhuma diferença no resultado final, nos 3 casos adicionam todos os arquivos da pasta atual, a única diferença que poderia ser citada é o fato de cada uma usar maneiras diferente para informar arquivos adicionados, uma usa caminhos de pasta, o `.` que informa a pasta atual, o simbolo pelo `*` e o uso de uma flag que contem suporte, sendo o `--all`",
+      "id_order_level": "efc3dffd-07be-4ad2-8a19-fd63c742d1cb"
+    },
+    {
+      "title": "Salvando o progresso com git commit",
+      "text": "Dolor natus eos quo voluptatem quaerat corporis voluptatum. Vel possimus quaerat quisquam et accusantium iste. Illo porro veniam unde totam quibusdam consequuntur enim.",
+      "id_order_level": "71496cdc-ad16-472f-95b3-0479350d8076"
+    },
+    {
+      "title": "Mensagem para o commit com ``git commit -m``",
+      "text": "Officia aut cupiditate distinctio modi tempora. Voluptas aut totam voluptas laboriosam provident voluptas aut. Nobis voluptatem consequatur et dolorem placeat.",
+      "id_order_level": "9e9ee79f-503f-479f-89b0-b81d83985673"
+    },
+    {
+      "title": "Combinando ``git add`` e ``git commit``",
+      "text": "Necessitatibus rerum aut aliquid quos. Autem est repudiandae tempora omnis omnis inventore cupiditate consequuntur. Quia aliquid eveniet id ipsa ratione temporibus ut dolorem explicabo.",
+      "id_order_level": "a155eed6-acc9-4c48-a7ba-8642e7976b93"
+    },
+    {
+      "title": "O conceito de branch no Git",
+      "text": "Aperiam alias omnis sit nostrum ut dolorem libero veniam. Quia asperiores est aut repellendus delectus quod ex earum sit. Quod quidem occaecati doloremque veniam totam cumque repellat.",
+      "id_order_level": "71496cdc-ad16-472f-95b3-0479350d8076"
+    },
+    {
+      "title": "Criando uma nova branch com ``git branch``",
+      "text": "Ratione architecto quis quidem rerum quod consequuntur rerum. Ipsam voluptas voluptates veniam molestiae fugit. Id nisi aut est voluptatibus facilis. Mollitia velit qui animi repellendus.",
+      "id_order_level": "9e9ee79f-503f-479f-89b0-b81d83985673"
+    },
+    {
+      "title": "Mudando de branch com ``git checkout``",
+      "text": "Et nulla non dicta occaecati qui cupiditate laboriosam dicta. Optio laudantium et sapiente ut et id beatae. Quia exercitationem voluptas quod ullam nostrum quisquam repellat consequatur.",
+      "id_order_level": "a155eed6-acc9-4c48-a7ba-8642e7976b93"
+    },
+    {
+      "title": "Combinando branches com ``git merge``",
+      "text": "Omnis et in voluptatum. Cum dolores voluptates nam repellendus. Sunt architecto nostrum rerum. Est quidem dolor ut et.",
+      "id_order_level": "a098f95e-f615-4d56-a197-c1b6edcf6ea9"
+    },
+    {
+      "title": "Resolvendo conflitos no Git",
+      "text": "Omnis animi similique aut harum. Sequi dolores repudiandae corrupti voluptatem. Veritatis officiis tempore veniam nisi voluptate. Sed consequatur dolore quaerat perferendis.",
+      "id_order_level": "da43aa2d-86be-4d0a-ae86-d95db0d7f364"
+    },
+    {
+      "title": "Git Rebase",
+      "text": "Omnis animi similique aut harum. Sequi dolores repudiandae corrupti voluptatem. Veritatis officiis tempore veniam nisi voluptate. Sed consequatur dolore quaerat perferendis.",
+      "id_order_level": "7200ec22-f1c6-4e94-9d9a-6c3997284dbb"
+    },
+    {
+      "title": "Diferenças entre Git Merge e Git Rebase",
+      "text": "Omnis animi similique aut harum. Sequi dolores repudiandae corrupti voluptatem. Veritatis officiis tempore veniam nisi voluptate. Sed consequatur dolore quaerat perferendis.",
+      "id_order_level": "db28c243-904a-4d6f-910e-c26d064d1b2f"
+    },
+    {
+      "title": "Pegando commit de outra branch",
+      "text": "Omnis animi similique aut harum. Sequi dolores repudiandae corrupti voluptatem. Veritatis officiis tempore veniam nisi voluptate. Sed consequatur dolore quaerat perferendis. Omnis animi similique aut harum. Sequi dolores repudiandae corrupti voluptatem. Veritatis officiis tempore veniam nisi voluptate. Sed consequatur dolore quaerat perferendis.",
+      "id_order_level": "a098f95e-f615-4d56-a197-c1b6edcf6ea9"
+    }
+  ],
+  "activity": [
+    {
+      "id_assessment": "0c9d3841-00f6-4dde-b7cb-7ac77f1e6b6e",
+      "id_order_level": "8218c35a-4c9d-4b36-a015-83344fcb967f"
+    },
+    {
+      "id_assessment": "e6e5c1b0-ff84-46a0-838d-cabbcac3ab2b",
+      "id_order_level": "6b475497-ae28-4fbc-80e6-5f89fc9cd169"
+    },
+    {
+      "id_assessment": "75444fd2-d148-48a0-a0be-ddf3a8b26087",
+      "id_order_level": "aa5bbbdc-5da4-409f-a3f3-60574fc3b83a"
+    }
+  ],
+  "orderLevel": [
+    {
+      "id": "1aab3adf-b3fd-4004-ab44-45490801492b",
+      "id_level": "5068028e-d499-4ca0-9f00-154ac301b1b9",
+      "order": 1
+    },
+    {
+      "id": "ff8baa23-3fdc-4250-bb39-830ff9dbcbfc",
+      "id_level": "5068028e-d499-4ca0-9f00-154ac301b1b9",
+      "order": 2
+    },
+    {
+      "id": "3cb3b438-7870-482b-be53-6ff130f52f65",
+      "id_level": "5068028e-d499-4ca0-9f00-154ac301b1b9",
+      "order": 3
+    },
+    {
+      "id": "aa00d974-a2c8-432e-9a5c-62f098c710d4",
+      "id_level": "5068028e-d499-4ca0-9f00-154ac301b1b9",
+      "order": 4
+    },
+    {
+      "id": "8218c35a-4c9d-4b36-a015-83344fcb967f",
+      "id_level": "5068028e-d499-4ca0-9f00-154ac301b1b9",
+      "order": 5
+    },
+    {
+      "id": "c5283836-1f2b-4a2f-b3ea-0e2f69fc8adb",
+      "id_level": "879b23bb-2c5f-431d-92ac-ea9d37ca9fda",
+      "order": 1
+    },
+    {
+      "id": "03fb4909-27a3-45de-9f6a-9151f49eb41b",
+      "id_level": "879b23bb-2c5f-431d-92ac-ea9d37ca9fda",
+      "order": 2
+    },
+    {
+      "id": "d7686af8-cff1-4a9c-92fd-3775f4d60ece",
+      "id_level": "879b23bb-2c5f-431d-92ac-ea9d37ca9fda",
+      "order": 3
+    },
+    {
+      "id": "daf2abad-d10b-496f-8c61-6bfb6174f4eb",
+      "id_level": "879b23bb-2c5f-431d-92ac-ea9d37ca9fda",
+      "order": 4
+    },
+    {
+      "id": "cca8c3db-e126-42bf-97da-ec139e77d3e7",
+      "id_level": "879b23bb-2c5f-431d-92ac-ea9d37ca9fda",
+      "order": 5
+    },
+    {
+      "id": "6b475497-ae28-4fbc-80e6-5f89fc9cd169",
+      "id_level": "879b23bb-2c5f-431d-92ac-ea9d37ca9fda",
+      "order": 6
+    },
+    {
+      "id": "efc3dffd-07be-4ad2-8a19-fd63c742d1cb",
+      "id_level": "879b23bb-2c5f-431d-92ac-ea9d37ca9fda",
+      "order": 7
+    },
+    {
+      "id": "71496cdc-ad16-472f-95b3-0479350d8076",
+      "id_level": "42b3c273-8e61-4f7c-b35c-94a099631908",
+      "order": 1
+    },
+    {
+      "id": "9e9ee79f-503f-479f-89b0-b81d83985673",
+      "id_level": "42b3c273-8e61-4f7c-b35c-94a099631908",
+      "order": 2
+    },
+    {
+      "id": "a155eed6-acc9-4c48-a7ba-8642e7976b93",
+      "id_level": "42b3c273-8e61-4f7c-b35c-94a099631908",
+      "order": 3
+    },
+    {
+      "id": "aa5bbbdc-5da4-409f-a3f3-60574fc3b83a",
+      "id_level": "42b3c273-8e61-4f7c-b35c-94a099631908",
+      "order": 4
+    },
+    {
+      "id": "a098f95e-f615-4d56-a197-c1b6edcf6ea9",
+      "id_level": "b4dc3d05-221c-41df-9106-7b553e11307e",
+      "order": 1
+    },
+    {
+      "id": "da43aa2d-86be-4d0a-ae86-d95db0d7f364",
+      "id_level": "b4dc3d05-221c-41df-9106-7b553e11307e",
+      "order": 2
+    },
+    {
+      "id": "7200ec22-f1c6-4e94-9d9a-6c3997284dbb",
+      "id_level": "b4dc3d05-221c-41df-9106-7b553e11307e",
+      "order": 3
+    },
+    {
+      "id": "db28c243-904a-4d6f-910e-c26d064d1b2f",
+      "id_level": "b4dc3d05-221c-41df-9106-7b553e11307e",
+      "order": 4
+    },
+    {
+      "id": "13898394-65c8-438e-b5b2-75f556bc00fc",
+      "id_level": "0175f9e5-942c-4f77-b9c3-9440e338c82b",
+      "order": 1
+    }
+  ],
+  "assessment": [
+    {
+      "title": "Responda as opções corretamente",
+      "id": "0c9d3841-00f6-4dde-b7cb-7ac77f1e6b6e"
+    },
+    {
+      "title": "Atividade pratica de git add",
+      "id": "e6e5c1b0-ff84-46a0-838d-cabbcac3ab2b"
+    },
+    {
+      "title": "Atividade pratica de git commit",
+      "id": "75444fd2-d148-48a0-a0be-ddf3a8b26087"
+    }
+  ],
+  "reports": [
+    {
+      "id_order_level": "1aab3adf-b3fd-4004-ab44-45490801492b",
+      "title": "Adicionar um nome mais coerente",
+      "description": "",
+      "status": "OPENED"
+    },
+    {
+      "id_order_level": "a098f95e-f615-4d56-a197-c1b6edcf6ea9",
+      "title": "Testando report",
+      "description": "Lorem ipsum dolor sit amet consectetur. Eget rhoncus tortor consequat in vitae sed mauris. Commodo odio venenatis ut nec mattis pharetra porttitor aliquet. Ultrices ac hendrerit pretium orci. Tempor eleifend ullamcorper ut ac fermentum.",
+      "status": "OPENED"
+    },
+    {
+      "id_order_level": "a098f95e-f615-4d56-a197-c1b6edcf6ea9",
+      "title": "Testando report 2",
+      "description": "Lorem ipsum dolor sit amet consectetur. Eget rhoncus tortor consequat in vitae sed mauris. Commodo odio venenatis ut nec mattis pharetra porttitor aliquet. Ultrices ac hendrerit pretium orci. Tempor eleifend ullamcorper ut ac fermentum.",
+      "status": "RESOLVED"
+    },
+    {
+      "id_order_level": "ff8baa23-3fdc-4250-bb39-830ff9dbcbfc",
+      "title": "Explicar melhor sobre o assunto",
+      "description": "Lorem ipsum dolor sit amet consectetur. Eget rhoncus tortor consequat in vitae sed mauris. Commodo odio venenatis ut nec mattis pharetra porttitor aliquet. Ultrices ac hendrerit pretium orci. Tempor eleifend ullamcorper ut ac fermentum.",
+      "status": "RESOLVED"
+    },
+    {
+      "id_order_level": "ff8baa23-3fdc-4250-bb39-830ff9dbcbfc",
+      "title": "Dar inicio a explicação",
+      "description": "Tentem dar um inicio a explicação sobre o tema, pode colocar de forma simplificada, depois vamos melhorar",
+      "status": "CLOSED"
+    }
+  ]
+}
