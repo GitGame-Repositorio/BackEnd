@@ -3,7 +3,7 @@ import { Privilegies, LevelProgressWhereInput } from "@prisma/client";
 import { unauthorizedError } from "../../services/objError";
 import { db } from "../../db";
 
-const include = { level: true, capterProgress: true, contentProgress: true };
+const include = { level: true, chapterProgress: true, contentProgress: true };
 
 export const handleAccessUser = async (
   req: Request,
@@ -20,12 +20,12 @@ export const handleAccessUser = async (
 
   if (req.adminAccess) return next();
 
-  if (userId === progress?.capterProgress.id_user) return next();
+  if (userId === progress?.chapterProgress.id_user) return next();
   if (method === "POST") {
-    const capterProgress = await db.capterProgress.findFirst({
-      where: { id: req.body?.id_capter_progress },
+    const chapterProgress = await db.chapterProgress.findFirst({
+      where: { id: req.body?.id_chapter_progress },
     });
-    if (!capterProgress || capterProgress.id_user === userId) return next();
+    if (!chapterProgress || chapterProgress.id_user === userId) return next();
   }
 
   throw unauthorizedError;
@@ -53,27 +53,27 @@ export const handleAccessAdmin = async (
 };
 
 export const create = async (req: Request, res: Response) => {
-  const { id, id_capter_progress, id_level, complete } = req.body;
+  const { id, id_chapter_progress, id_level } = req.body;
   const id_user = req.userId;
 
-  const level = await db.level.findUnique({
+  const level = await db.level.findUniqueOrThrow({
     where: { id: id_level },
-    include: { capter: true },
+    include: { chapter: true },
   });
 
-  const id_capter = level.capter.id;
+  const id_chapter = level.chapter.id;
 
   const levelProgress = await db.levelProgress.create({
     data: {
       id,
-      capterProgress: {
+      chapterProgress: {
         connectOrCreate: {
           create: {
-            id_capter,
+            id_chapter,
             id_user,
           },
           where: {
-            id: id_capter_progress,
+            id: id_chapter_progress || "",
           },
         },
       },
@@ -98,13 +98,13 @@ export const getById = async (req: Request, res: Response) => {
 };
 
 export const getAll = async (req: Request, res: Response) => {
-  const { id_user } = req.query;
+  const { id_user, ...query } = req.query;
 
-  const objFilterUser = id_user ? { capterProgress: { id_user } } : {};
+  const objFilterUser = id_user ? { chapterProgress: { id_user } } : {};
+
   const filter: Partial<LevelProgressWhereInput> = {
-    ...req.query,
+    ...query,
     ...objFilterUser,
-    id_user: undefined,
   };
 
   const levelProgress = await db.levelProgress.findMany({
@@ -113,27 +113,6 @@ export const getAll = async (req: Request, res: Response) => {
   });
 
   res.json(levelProgress);
-};
-
-export const getAllUser = async (req: Request, res: Response) => {
-  const limit = Number(req.query.limit);
-  const { userId } = req;
-
-  const filter = {
-    ...req.query,
-    capterProgress: { id_user: userId },
-    limit: undefined,
-  };
-
-  const levelProgress = await db.levelProgress.findMany({
-    where: filter,
-    include,
-    take: limit || 1000,
-  });
-
-  const response = limit == 1 ? levelProgress[0] : levelProgress;
-
-  res.json(response);
 };
 
 export const update = async (req: Request, res: Response) => {

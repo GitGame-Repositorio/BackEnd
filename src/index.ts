@@ -8,8 +8,9 @@ import { handleError } from "./middleware/handleError";
 import { router as routerAuth } from "./router/auth";
 import { router as routerGame } from "./router/game";
 import { router as routerProgress } from "./router/progress";
+import { router as routerStatistics } from "./router/statistics";
 
-const app = express();
+export const app = express();
 
 app.use(express.json());
 app.use(cors());
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(routerAuth);
 app.use(routerGame);
 app.use(routerProgress);
+app.use(routerStatistics);
 app.use("/images", express.static("uploads"));
 app.use(handleError);
 

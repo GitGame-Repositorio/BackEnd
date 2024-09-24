@@ -1,6 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-import { Level, Privilegies } from "@prisma/client";
+import { Chapter, Privilegies } from "@prisma/client";
 import { db } from "../../db";
+
+const include = {
+  level: {
+    include: {
+      orderLevel: {
+        include: { activity: { include: { assessment: true } }, subject: true },
+      },
+    },
+  },
+  exam: true,
+};
 
 export const handleAccess = async (
   req: Request,
@@ -11,7 +22,7 @@ export const handleAccess = async (
 
   const objError = {
     status: 401,
-    message: "Access denied. Protecting level privacy.",
+    message: "Access denied. Protecting chapter privacy.",
   };
 
   if (!privilegies.canManageContentGame) throw objError;
@@ -19,49 +30,47 @@ export const handleAccess = async (
 };
 
 export const create = async (req: Request, res: Response) => {
-  const level = await db.level.create({ data: req.body });
-  res.status(201).json(level);
+  const chapter = await db.chapter.create({
+    data: req.body,
+    include: { level: {} },
+  });
+  res.status(201).json(chapter);
 };
 
 export const getById = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const level = await db.level.findUniqueOrThrow({
+  const chapter = await db.chapter.findUniqueOrThrow({
     where: { id },
-    include: {
-      chapter: true,
-      orderLevel: {
-        include: {
-          activity: true,
-          subject: true,
-        },
-      },
-    },
+    include,
   });
-  res.json(level);
+  res.json(chapter);
 };
 
 export const getAll = async (req: Request, res: Response) => {
   const { numberOrder } = req.query;
-  const filter: Partial<Level> = {
+  const filter: Partial<Chapter> = {
     ...req.query,
     numberOrder: numberOrder && Number(numberOrder),
   };
-  const level = await db.level.findMany({ where: filter });
-  res.json(level);
+  const chapter = await db.chapter.findMany({
+    where: filter,
+    include,
+  });
+  res.json(chapter);
 };
 
 export const update = async (req: Request, res: Response) => {
   const { id } = req.params;
   const where = { id };
 
-  await db.level.findUniqueOrThrow({ where });
+  await db.chapter.findUniqueOrThrow({ where });
 
-  const level = await db.level.update({ data: req.body, where });
-  res.status(203).json(level);
+  const chapter = await db.chapter.update({ data: req.body, where, include });
+  res.status(203).json(chapter);
 };
 
 export const destroy = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const level = await db.level.delete({ where: { id } });
-  res.status(204).json(level);
+  const chapter = await db.chapter.delete({ where: { id } });
+  res.status(204).json(chapter);
 };

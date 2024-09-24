@@ -28,14 +28,14 @@ const statusObj = {
 export const generateProgress = async (req: Request, res: Response) => {
   const id = req.userId;
 
-  const allCapter = await db.capter.findMany({
-    include: { capterProgress: { where: { id_user: id } }, level: true },
+  const allChapter = await db.chapter.findMany({
+    include: { chapterProgress: { where: { id_user: id } }, level: true },
   });
 
   const allProgress = await db.user.findUnique({
     where: { id },
     include: {
-      capterProgress: {
+      chapterProgress: {
         include: {
           levelProgress: {
             include: {
@@ -56,17 +56,17 @@ export const generateProgress = async (req: Request, res: Response) => {
     },
   });
 
-  const listCapterProgress = allProgress?.capterProgress || [];
+  const listChapterProgress = allProgress?.chapterProgress || [];
 
-  const allCapterRemap = listCapterProgress.map((capterProgress) => {
-    const newLevelProgress = capterProgress.levelProgress
+  const allChapterRemap = listChapterProgress.map((chapterProgress) => {
+    const newLevelProgress = chapterProgress.levelProgress
       .map((levelProgress) => {
         const contentProgress = levelProgress?.contentProgress || [];
 
         const valueCountContent = contentProgress.reduce(
-          (acumulator, current) => {
+          (accumulator, current) => {
             const valueActual = current.complete ? 1 : 0;
-            return valueActual + acumulator;
+            return valueActual + accumulator;
           },
           0
         );
@@ -83,36 +83,36 @@ export const generateProgress = async (req: Request, res: Response) => {
       })
       .flat();
 
-    const sumLevelPercent = newLevelProgress.reduce((acumulator, current) => {
+    const sumLevelPercent = newLevelProgress.reduce((accumulator, current) => {
       const percent = current.percentLevel;
-      return percent + acumulator;
+      return percent + accumulator;
     }, 0);
 
-    const capterFind = allCapter?.find(
-      (capter) => capter.id === capterProgress.id_capter
+    const chapterFind = allChapter?.find(
+      (chapter) => chapter.id === chapterProgress.id_chapter
     );
 
-    const countCapter = capterFind?.level?.length;
-    const percentCapter = Math.floor(sumLevelPercent / countCapter);
+    const countChapter = chapterFind?.level?.length;
+    const percentChapter = Math.floor(sumLevelPercent / countChapter);
 
     return {
-      percentCapter,
-      capterProgress: {
-        ...capterProgress,
+      percentChapter,
+      chapterProgress: {
+        ...chapterProgress,
         levelProgress: newLevelProgress,
-        status: statusObj[percentCapter] || StatusProgress.IN_PROGRESS,
+        status: statusObj[percentChapter] || StatusProgress.IN_PROGRESS,
         user: undefined,
       },
     };
   });
 
-  const sumPercent = allCapterRemap.reduce((acumulator, capterCurrent) => {
-    const percent = capterCurrent?.percentCapter;
-    return percent + acumulator;
+  const sumPercent = allChapterRemap.reduce((accumulator, chapterCurrent) => {
+    const percent = chapterCurrent?.percentChapter;
+    return percent + accumulator;
   }, 0);
 
-  const completeGamePercentage = Math.floor(sumPercent / allCapter.length) | 0;
-  const response = { completeGamePercentage, allCapterRemap };
+  const completeGamePercentage = Math.floor(sumPercent / allChapter.length) | 0;
+  const response = { completeGamePercentage, allChapterRemap: allChapterRemap };
 
   const minutes = 5;
   const secondsInMinute = 60;

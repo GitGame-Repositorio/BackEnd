@@ -1,9 +1,8 @@
 import express from "express";
 
-import * as capterProgress from "../controller/progress/capterProgress";
+import * as chapterProgress from "../controller/progress/chapterProgress";
 import * as levelProgress from "../controller/progress/levelProgress";
 import * as contentProgress from "../controller/progress/contentProgress";
-import * as progress from "../controller/progress/userProgress";
 
 import { authorization } from "../middleware/isAuttenticate";
 import { verifyPermission } from "../middleware/verifyPermission";
@@ -23,6 +22,7 @@ const generateRoutersGame = (path, controller) => {
       authorization,
       verifyPermission,
       controller.handleAccessAdmin,
+      controller.handleAccessUser,
       controller.getAll
     );
 
@@ -48,14 +48,17 @@ const generateRoutersGame = (path, controller) => {
     );
 
   const progressMeURL = "/progress" + path + "/me";
-  router.get(progressMeURL, authorization, controller.getAllUser);
+  router.get(
+    progressMeURL,
+    authorization,
+    (req, res, next) => {
+      req.query.id_user = req.userId;
+      return next();
+    },
+    controller.getAll
+  );
 };
 
-router
-  .route("/progress/me")
-  .post(authorization, progress.generateProgress)
-  .get(authorization, progress.getProgress, progress.generateProgress);
-
-generateRoutersGame("/capter_progress", capterProgress);
+generateRoutersGame("/chapter_progress", chapterProgress);
 generateRoutersGame("/level_progress", levelProgress);
 generateRoutersGame("/content_progress", contentProgress);

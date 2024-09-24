@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { UserLogged } from "@prisma/client";
 import bcrypt from "bcrypt";
 
-import { generateNumber } from "../../services/generateNumber";
+import { generateNumber } from "../../services/numbers";
 import { redis } from "../../redis";
 import { db } from "../../db";
 import { sendCodeEmail } from "../../services/email";

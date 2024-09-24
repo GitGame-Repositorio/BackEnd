@@ -1,118 +1,141 @@
 import { Request, Response } from "express";
-import { Privilegies } from "@prisma/client";
-import bcrypt from "bcrypt";
+import { Privilegies, UserWork } from "@prisma/client";
+
+import { unauthorizedError } from "../../services/objError";
 import { db } from "../../db";
 
-const select = {
-  id_user: true,
-  user: {
-    select: {
-      email: true,
-      name: true,
+const include = {
+  userLogged: {
+    include: {
+      user: { include: { userWork: true } },
     },
   },
   privilegies: true,
 };
 
+const objResponse = (admin) => {
+  const type = !admin.userLogged ? "anonymous" : "logged";
+  const works = admin.userLogged.user.userWork.map(
+    ({ work }: UserWork) => work
+  );
+  return {
+    ...admin,
+    ...admin.userLogged,
+    ...admin.userLogged.user,
+    admin: admin.privilegies,
+    userLogged: undefined,
+    password: undefined,
+    works,
+    type,
+  };
+};
+
 export const create = async (req: Request, res: Response) => {
   const privilegies: Privilegies = req.privilegies;
 
-  if (!privilegies.canCreateAdmin)
-    throw { status: 401, message: "Access denied. Insufficient privileges." };
+  if (!privilegies?.canCreateAdmin) throw unauthorizedError;
 
-  const { second_password } = req.body;
-
-  const create = {
-    ...req.body,
-    second_password: second_password
-      ? await bcrypt.hash(second_password, 10)
-      : undefined,
-  };
+  const { id_user, ...data } = req.body;
 
   const user = await db.admin.create({
     data: {
-      ...create,
+      userLogged: {
+        connect: {
+          id_user,
+        },
+      },
       privilegies: {
-        create: {},
+        create: data,
       },
     },
-    select,
+    include,
   });
 
-  res.status(201).json(user);
+  const response = objResponse(user);
+  res.status(201).json(response);
 };
 
 export const getAll = async (req: Request, res: Response) => {
+  const privilegies: Privilegies = req.privilegies;
+  const { limit } = req?.query;
+
+  if (!privilegies.canViewAllAdmin) throw unauthorizedError;
+
+  const listUser = await db.admin.findMany({
+    where: { privilegies: req.body },
+    take: Number(limit) || 100,
+    include,
+  });
+
+  res.json(listUser.map(objResponse));
+};
+
+export const getById = async (req: Request, res: Response) => {
   const privilegies: Privilegies = req.privilegies;
   const { id_user } = req.params;
   const userId = req.userId;
 
   if (userId !== id_user && !privilegies.canViewAllAdmin)
-    throw { status: 401, message: "Access denied. Protecting user privacy." };
-
-  const user = await db.admin.findMany({ select });
-  res.json(user);
-};
-
-export const getById = async (req: Request, res: Response) => {
-  const privilegies: Privilegies = req.privilegies;
-  const { id_userLogged } = req.params;
-  const userId = req.userId;
-
-  if (userId !== id_userLogged && !privilegies.canViewAllAdmin)
-    throw { status: 401, message: "Access denied. Protecting user privacy." };
+    throw unauthorizedError;
 
   const user = await db.admin.findUniqueOrThrow({
-    where: { id_userLogged },
-    select,
+    where: { id_userLogged: id_user },
+    include,
   });
 
-  res.json(user);
+  const response = objResponse(user);
+  res.json(response);
 };
 
 export const update = async (req: Request, res: Response) => {
   const privilegies: Privilegies = req.privilegies;
-  const { id_userLogged } = req.params;
+  const { id_user } = req.params;
   const userId = req.userId;
-  const where = { id_userLogged };
+  const where = { id_userLogged: id_user };
 
-  if (userId !== id_userLogged && !privilegies.canEditPrivilegiesAdmin)
-    throw { status: 401, message: "Access denied. Protecting user privacy." };
+  if (userId !== id_user && !privilegies.canEditPrivilegiesAdmin)
+    throw unauthorizedError;
 
   await db.admin.findUniqueOrThrow({ where });
-  const { second_password } = req.body;
 
-  const update = {
-    second_password: second_password
-      ? await bcrypt.hash(second_password, 10)
-      : undefined,
-  };
-
-  const updatePrivilegies = req.body;
-  delete updatePrivilegies["second_password"];
+  const { privilegies: updatePrivilegies, ...rest } = req.body;
   delete updatePrivilegies["id_user"];
+
+  const { email, name, ...restUser } = rest;
 
   const user = await db.admin.update({
     data: {
-      ...update,
       privilegies: {
         update: updatePrivilegies,
       },
+      userLogged: {
+        update: {
+          email,
+          name,
+          user: {
+            update: {
+              ...restUser,
+            },
+          },
+        },
+      },
     },
     where,
-    select,
+    include,
   });
-  res.status(203).json(user);
+
+  const response = objResponse(user);
+  res.status(203).json(response);
 };
 
 export const destroy = async (req: Request, res: Response) => {
   const privilegies: Privilegies = req.privilegies;
-  const { id_userLogged } = req.params;
+  const { id_user } = req.params;
   const userId = req.userId;
 
-  if (userId !== id_userLogged && !privilegies.canDeleteAdmin)
-    throw { status: 401, message: "Access denied. Insufficient privileges." };
+  if (userId !== id_user && !privilegies.canDeleteAdmin)
+    throw unauthorizedError;
 
-  const user = await db.admin.delete({ where: { id_userLogged } });
+  const user = await db.admin.delete({ where: { id_userLogged: id_user } });
   res.status(204).json(user);
 };

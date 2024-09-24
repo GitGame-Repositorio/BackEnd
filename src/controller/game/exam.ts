@@ -6,7 +6,7 @@ const select = {
   id_assessment: true,
   description: true,
   assessment: true,
-  id_capter: true,
+  id_chapter: true,
 };
 
 export const handleAccess = async (
@@ -26,7 +26,7 @@ export const handleAccess = async (
 };
 
 export const create = async (req: Request, res: Response) => {
-  const { title, description, id_capter } = req.body;
+  const { title, description, id_chapter } = req.body;
   const exam = await db.exam.create({
     select,
     data: {
@@ -34,8 +34,8 @@ export const create = async (req: Request, res: Response) => {
       assessment: {
         create: { title },
       },
-      capter: {
-        connect: { id: id_capter },
+      chapter: {
+        connect: { id: id_chapter },
       },
     },
   });

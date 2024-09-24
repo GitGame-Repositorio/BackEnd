@@ -4,7 +4,7 @@ import * as objective from "../controller/game/objective";
 import * as activity from "../controller/game/activity";
 import * as reports from "../controller/game/reports";
 import * as subject from "../controller/game/subject";
-import * as capter from "../controller/game/capter";
+import * as chapter from "../controller/game/chapter";
 import * as level from "../controller/game/level";
 import * as exam from "../controller/game/exam";
 
@@ -60,6 +60,6 @@ router
 generateRoutersGame("/objective", objective);
 generateRoutersGame("/activity", activity);
 generateRoutersGame("/subject", subject);
-generateRoutersGame("/capter", capter);
+generateRoutersGame("/chapter", chapter);
 generateRoutersGame("/level", level);
 generateRoutersGame("/exam", exam);

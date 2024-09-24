@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { Privilegies } from "@prisma/client";
 import { db } from "../../db";
-import { nextOrderLevel } from "../../services/countOrderLevelRegisters";
+import { nextOrderLevel } from "../../services/numbers";
 
 const include = {
   assessment: true,
-  orderLevel: true,
+  orderLevel: { include: { level: true } },
 };
 
 export const handleAccess = async (

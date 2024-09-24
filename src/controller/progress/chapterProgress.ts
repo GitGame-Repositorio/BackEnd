@@ -1,13 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import {
-  ContentProgress,
-  Privilegies,
-  ContentProgressWhereInput,
-} from "@prisma/client";
+import { Privilegies } from "@prisma/client";
 import { db } from "../../db";
 import { unauthorizedError } from "../../services/objError";
 
-const include = { user: true, capter: true };
+const include = { user: true, chapter: true };
 
 export const handleAccessUser = async (
   req: Request,
@@ -19,7 +15,7 @@ export const handleAccessUser = async (
 
   if (req.adminAccess) return next();
 
-  const progress = await db.capterProgress.findFirst({
+  const progress = await db.chapterProgress.findFirst({
     where: { id },
     include,
   });
@@ -52,71 +48,47 @@ export const handleAccessAdmin = async (
 };
 
 export const create = async (req: Request, res: Response) => {
-  const capterProgress = await db.capterProgress.create({
+  const chapterProgress = await db.chapterProgress.create({
     data: req.body,
     include,
   });
-  res.status(201).json(capterProgress);
+  res.status(201).json(chapterProgress);
 };
 
 export const getById = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const capterProgress = await db.capterProgress.findUniqueOrThrow({
+  const chapterProgress = await db.chapterProgress.findUniqueOrThrow({
     where: { id },
     include,
   });
-  res.json(capterProgress);
+  res.json(chapterProgress);
 };
 
 export const getAll = async (req: Request, res: Response) => {
-  const { id_user } = req.query;
-
-  const capterProgress = await db.capterProgress.findMany({
-    where: { ...req.query, id_user },
+  const chapterProgress = await db.chapterProgress.findMany({
+    where: { ...req.query },
     include,
   });
-
-  res.json(capterProgress);
-};
-
-export const getAllUser = async (req: Request, res: Response) => {
-  const limit = Number(req.query.limit);
-  const { userId } = req;
-
-  const filter = {
-    ...req.query,
-    id_user: userId,
-    limit: undefined,
-  };
-
-  const capterProgress = await db.capterProgress.findMany({
-    where: filter,
-    include,
-    take: limit || 1000,
-  });
-
-  const response = limit == 1 ? capterProgress[0] : capterProgress;
-
-  res.json(response);
+  res.json(chapterProgress);
 };
 
 export const update = async (req: Request, res: Response) => {
   const { id } = req.params;
   const where = { id };
 
-  await db.capterProgress.findUniqueOrThrow({ where });
+  await db.chapterProgress.findUniqueOrThrow({ where });
 
-  const capterProgress = await db.capterProgress.update({
+  const chapterProgress = await db.chapterProgress.update({
     data: req.body,
     where,
     include,
   });
 
-  res.status(203).json(capterProgress);
+  res.status(203).json(chapterProgress);
 };
 
 export const destroy = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const capterProgress = await db.capterProgress.delete({ where: { id } });
-  res.status(204).json(capterProgress);
+  const chapterProgress = await db.chapterProgress.delete({ where: { id } });
+  res.status(204).json(chapterProgress);
 };

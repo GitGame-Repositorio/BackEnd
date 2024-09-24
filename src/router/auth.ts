@@ -32,6 +32,8 @@ router
   .patch(authorization, user.update)
   .delete(authorization, user.destroy);
 
+router.post("/user/me/works", authorization, user.updateWork);
+
 router.post(
   "/user/me/picture",
   authorization,
@@ -46,6 +48,8 @@ router
   .get(authorization, player.handleAccess, player.getById)
   .patch(authorization, player.handleAccess, player.update)
   .delete(authorization, player.handleAccess, player.destroy);
+
+// router.put("/player/:id_user/works", authorization, user.updateWork);
 
 router
   .route("/admin")

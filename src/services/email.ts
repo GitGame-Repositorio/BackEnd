@@ -35,3 +35,22 @@ export const sendCodeEmail = async (email: string, code: number) => {
     `,
   });
 };
+
+export const sendValidateUser = async (email: string, link: string) => {
+  await transporter.sendMail({
+    from: 'GitGame "Link for vincule account" <maddison53@ethereal.email>',
+    to: email,
+    subject: "Link for vincule account",
+    html: `
+      <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2>Vinculo de conta</h2>
+        <p>Para salvar o progresso é necessário criar um novo usuário</p>
+        <p>Confirme se deseja a criação desse usuário com esse email apertando no link abaixo, ao qual criará sua conta e te enviará de volta ao jogo</p>
+        <p style="font-size: 24px; font-weight: bold;">Link: <span style="color: blue;">${link}</span></p>
+        <p>Este link é válido por 24 horas. Se você não solicitou esse link, ignore este e-mail.</p>
+        <p>Obrigado,</p>
+        <p>Equipe GitGame</p>
+      </div>
+    `,
+  });
+};

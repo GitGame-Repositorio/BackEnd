@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { Privilegies, Subject } from "@prisma/client";
 import { db } from "../../db";
-import { nextOrderLevel } from "../../services/countOrderLevelRegisters";
+import { nextOrderLevel } from "../../services/numbers";
 
-const include = { orderLevel: true };
+const include = { orderLevel: { include: { level: true } } };
 
 export const handleAccess = async (
   req: Request,
@@ -42,7 +42,10 @@ export const create = async (req: Request, res: Response) => {
 
 export const getById = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const subject = await db.subject.findUniqueOrThrow({ where: { id } });
+  const subject = await db.subject.findUniqueOrThrow({
+    where: { id },
+    include,
+  });
   res.json(subject);
 };
 
