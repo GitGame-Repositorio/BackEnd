@@ -1,11 +1,7 @@
 import { Request, Response } from "express";
-import { db } from "../../../src/db";
+import { db } from "../../../src/database/postgres";
 import { register } from "../../../src/controller/auth/auth";
-import {
-  mockRes,
-  msgInvalidFormat,
-  msgUniqueConst,
-} from "../config";
+import { mockRes, msgInvalidFormat, msgUniqueConst } from "../config";
 import { expectUser } from "./configTestsAuth";
 import { msgIsMissing } from "../../../src/services/objError";
 

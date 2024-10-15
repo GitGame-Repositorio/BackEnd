@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 
-import { db } from "../../../src/db";
+import { db } from "../../../src/database/postgres";
 import { expectAdminObj, expectUser } from "./configTestsAuth";
 import {
   mockRes,

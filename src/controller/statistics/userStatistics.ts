@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { db } from "../../db";
-import { redis } from "../../redis";
+import { db } from "../../database/postgres";
+import { redis } from "../../database/redis";
 
 export const getProgress = async (
   req: Request,
@@ -14,22 +14,47 @@ export const getProgress = async (
   res.json(response);
 };
 
-enum StatusProgress {
-  TO_DO = "TO_DO",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
-}
-
-const statusObj = {
-  0: StatusProgress.TO_DO,
-  100: StatusProgress.COMPLETED,
+const sumPercentInList = ({
+  propName,
+  list,
+}: {
+  list: object[];
+  propName: string;
+}) => {
+  return list.reduce((accumulator, current) => {
+    const percent = current[propName];
+    return percent + accumulator;
+  }, 0);
 };
+
+const storeRedis = async ({ key, obj }: { key: string; obj: object }) => {
+  const minutes = 5;
+  const secondsInMinute = 60;
+
+  await redis.set(key, JSON.stringify(obj), {
+    EX: minutes * secondsInMinute,
+  });
+};
+
+const objStatusProgress = {
+  0: "TO_DO",
+  100: "COMPLETED",
+};
+
+const getStatus = (percent: number) =>
+  objStatusProgress[percent] || "IN_PROGRESS";
+
+const calculatePercent = ({ count, size }: { count: number; size: number }) =>
+  Math.floor((count * 100) / size) | 0;
 
 export const generateProgress = async (req: Request, res: Response) => {
   const id = req.userId;
 
   const allChapter = await db.chapter.findMany({
-    include: { chapterProgress: { where: { id_user: id } }, level: true },
+    include: {
+      chapterProgress: { where: { id_user: id } },
+      level: { include: { content: true } },
+    },
   });
 
   const allProgress = await db.user.findUnique({
@@ -42,7 +67,7 @@ export const generateProgress = async (req: Request, res: Response) => {
               contentProgress: true,
               level: {
                 include: {
-                  orderLevel: true,
+                  content: true,
                 },
               },
             },
@@ -56,70 +81,74 @@ export const generateProgress = async (req: Request, res: Response) => {
     },
   });
 
-  const listChapterProgress = allProgress?.chapterProgress || [];
-
-  const allChapterRemap = listChapterProgress.map((chapterProgress) => {
-    const newLevelProgress = chapterProgress.levelProgress
-      .map((levelProgress) => {
-        const contentProgress = levelProgress?.contentProgress || [];
-
-        const valueCountContent = contentProgress.reduce(
-          (accumulator, current) => {
-            const valueActual = current.complete ? 1 : 0;
-            return valueActual + accumulator;
-          },
-          0
-        );
-
-        const sizeContentLevel = levelProgress.level.orderLevel?.length;
-        const percentLevel = ((valueCountContent * 100) / sizeContentLevel) | 0;
-
-        const response = {
-          percentLevel,
-          ...levelProgress,
-          status: statusObj[percentLevel] || StatusProgress.IN_PROGRESS,
-        };
-        return response;
-      })
-      .flat();
-
-    const sumLevelPercent = newLevelProgress.reduce((accumulator, current) => {
-      const percent = current.percentLevel;
-      return percent + accumulator;
-    }, 0);
-
-    const chapterFind = allChapter?.find(
-      (chapter) => chapter.id === chapterProgress.id_chapter
+  const allChapterRemap = allChapter.map((chapter) => {
+    const chProgress = allProgress?.chapterProgress.find(
+      (progress) => progress.id_chapter === chapter.id
     );
 
-    const countChapter = chapterFind?.level?.length;
-    const percentChapter = Math.floor(sumLevelPercent / countChapter);
+    const listLevel = chapter.level.map((level) => {
+      const lvProgress = chProgress?.levelProgress?.find(
+        (progress) => progress.id_level === level.id
+      );
 
+      const listContent = level.content.map((content) => {
+        const ctProgress = lvProgress?.contentProgress?.find(
+          (progress) => progress.id_content === content.id
+        );
+
+        return {
+          ...ctProgress,
+          ...content,
+        };
+      });
+
+      const countContentComplete = listContent.filter(
+        (obj) => obj.complete
+      ).length;
+
+      const percentLevel = calculatePercent({
+        count: countContentComplete,
+        size: listContent.length,
+      });
+
+      return {
+        ...level,
+        content: listContent,
+        percentLevel,
+        status: getStatus(percentLevel),
+      };
+    });
+
+    const sumPercent = sumPercentInList({
+      propName: "percentLevel",
+      list: listLevel,
+    });
+
+    const percentChapter = calculatePercent({
+      count: sumPercent,
+      size: listLevel.length * 100,
+    });
     return {
+      ...chapter,
+      level: listLevel,
       percentChapter,
-      chapterProgress: {
-        ...chapterProgress,
-        levelProgress: newLevelProgress,
-        status: statusObj[percentChapter] || StatusProgress.IN_PROGRESS,
-        user: undefined,
-      },
+      status: getStatus(percentChapter),
     };
   });
 
-  const sumPercent = allChapterRemap.reduce((accumulator, chapterCurrent) => {
-    const percent = chapterCurrent?.percentChapter;
-    return percent + accumulator;
-  }, 0);
+  const sumPercent = sumPercentInList({
+    list: allChapterRemap,
+    propName: "percentChapter",
+  });
 
-  const completeGamePercentage = Math.floor(sumPercent / allChapter.length) | 0;
+  const completeGamePercentage = calculatePercent({
+    count: sumPercent,
+    size: allChapterRemap.length * 100,
+  });
+
   const response = { completeGamePercentage, allChapterRemap: allChapterRemap };
 
-  const minutes = 5;
-  const secondsInMinute = 60;
-
-  await redis.set(`progress-${id}`, JSON.stringify(response), {
-    EX: minutes * secondsInMinute,
-  });
+  await storeRedis({ key: `progress-${id}`, obj: response });
 
   res.status(201).json(response);
 };

@@ -1,13 +1,13 @@
-import { db } from "../db";
+import { db } from "../database/postgres";
 
-export const nextOrderLevel = async (id_level: string) => {
+export const nextContentID = async (id_level: string) => {
   const levelObj = await db.level.findUniqueOrThrow({
     where: { id: id_level },
     select: {
       _count: true,
     },
   });
-  const count = levelObj._count.orderLevel;
+  const count = levelObj._count.content;
   return count + 1;
 };
 

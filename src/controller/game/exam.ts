@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { Exam, Privilegies } from "@prisma/client";
-import { db } from "../../db";
+import { Privilegies } from "@prisma/client";
+import { db } from "../../database/postgres";
+import { mongoDB, mongo } from "../../database/mongo";
+import { Exam } from "../../@types/game";
+import { ObjectId } from "mongodb";
+import { convertID, findExam } from "../../services/mongoCRUD";
 
 const select = {
   id_assessment: true,
@@ -26,52 +30,47 @@ export const handleAccess = async (
 };
 
 export const create = async (req: Request, res: Response) => {
-  const { title, description, id_chapter } = req.body;
-  const exam = await db.exam.create({
-    select,
-    data: {
-      description,
-      assessment: {
-        create: { title },
-      },
-      chapter: {
-        connect: { id: id_chapter },
-      },
-    },
+  const { id_chapter, ...rest } = req.body;
+
+  await db.chapter.findUniqueOrThrow({ where: { id: id_chapter } });
+  const obj = await mongo.exam.insertOne(rest);
+  const id = obj.insertedId.toString();
+
+  await db.chapter.update({
+    data: { id_exam: id },
+    where: { id: id_chapter },
   });
+
+  const exam = await mongo.exam.findOne({
+    _id: ObjectId.createFromHexString(id),
+  });
+
   res.status(201).json(exam);
 };
 
 export const getById = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const exam = await db.exam.findUniqueOrThrow({
-    where: { id_assessment: id },
-    select,
-  });
+  const exam = (await findExam(id)) || {};
   res.json(exam);
 };
 
 export const getAll = async (req: Request, res: Response) => {
-  const filter: Partial<Exam> = {
-    ...req.query,
-    description: undefined,
-  };
-  const exam = await db.exam.findMany({ where: filter, select });
+  const { description, ...rest } = req.query;
+  const exam = await mongo.exam.find(rest).toArray();
   res.json(exam);
 };
 
 export const update = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const where = { id_assessment: id };
-
-  await db.exam.findUniqueOrThrow({ where });
-
-  const exam = await db.exam.update({ data: req.body, where, select });
+  await mongo.exam.findOneAndUpdate({ _id: convertID(id) }, { $set: req.body });
+  const exam = await findExam(id);
   res.status(203).json(exam);
 };
 
 export const destroy = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const exam = await db.exam.delete({ where: { id_assessment: id }, select });
+  const exam = await mongo.exam.findOneAndDelete({
+    _id: convertID(id),
+  });
   res.status(204).json(exam);
 };

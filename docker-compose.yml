@@ -14,3 +14,11 @@ services:
     restart: always
     ports:
       - 6379:6379
+  mongo:
+    image: mongo
+    container_name: Mongo_GitGame
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 27017:27017

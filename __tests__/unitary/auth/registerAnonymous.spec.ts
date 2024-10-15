@@ -1,5 +1,5 @@
 import { registerAnonymous } from "../../../src/controller/auth/auth";
-import { db } from "../../../src/db";
+import { db } from "../../../src/database/postgres";
 import { expectUser } from "./configTestsAuth";
 
 describe("Tests for controller create user anonymous", () => {

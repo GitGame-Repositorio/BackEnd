@@ -1,9 +1,10 @@
 import express from "express";
 
-import * as objective from "../controller/game/objective";
-import * as activity from "../controller/game/activity";
+// import * as objective from "../controller/game/objective";
+// import * as activity from "../controller/game/activity";
 import * as reports from "../controller/game/reports";
-import * as subject from "../controller/game/subject";
+// import * as subject from "../controller/game/subject";
+import * as content from "../controller/game/content";
 import * as chapter from "../controller/game/chapter";
 import * as level from "../controller/game/level";
 import * as exam from "../controller/game/exam";
@@ -57,9 +58,10 @@ router
     reports.destroy
   );
 
-generateRoutersGame("/objective", objective);
-generateRoutersGame("/activity", activity);
-generateRoutersGame("/subject", subject);
+// generateRoutersGame("/objective", objective);
+// generateRoutersGame("/activity", activity);
+// generateRoutersGame("/subject", subject);
+generateRoutersGame("/content", content);
 generateRoutersGame("/chapter", chapter);
 generateRoutersGame("/level", level);
 generateRoutersGame("/exam", exam);

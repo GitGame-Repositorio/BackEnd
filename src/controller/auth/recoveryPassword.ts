@@ -3,8 +3,8 @@ import { UserLogged } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 import { generateNumber } from "../../services/numbers";
-import { redis } from "../../redis";
-import { db } from "../../db";
+import { redis } from "../../database/redis";
+import { db } from "../../database/postgres";
 import { sendCodeEmail } from "../../services/email";
 
 const redisKeyCode = "code-recovery-password";

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Privilegies, UserWork } from "@prisma/client";
 
 import { unauthorizedError } from "../../services/objError";
-import { db } from "../../db";
+import { db } from "../../database/postgres";
 
 const include = {
   userLogged: {

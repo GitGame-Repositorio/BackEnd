@@ -1,16 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import { Chapter, Privilegies } from "@prisma/client";
-import { db } from "../../db";
+import { findExam } from "../../services/mongoCRUD";
+import { db } from "../../database/postgres";
 
 const include = {
   level: {
     include: {
-      orderLevel: {
-        include: { activity: { include: { assessment: true } }, subject: true },
-      },
+      content: true,
     },
   },
-  exam: true,
 };
 
 export const handleAccess = async (
@@ -39,11 +37,14 @@ export const create = async (req: Request, res: Response) => {
 
 export const getById = async (req: Request, res: Response) => {
   const { id } = req.params;
+
   const chapter = await db.chapter.findUniqueOrThrow({
     where: { id },
     include,
   });
-  res.json(chapter);
+
+  const exam = await findExam(chapter.id_exam);
+  res.json({ ...chapter, exam });
 };
 
 export const getAll = async (req: Request, res: Response) => {
@@ -52,11 +53,20 @@ export const getAll = async (req: Request, res: Response) => {
     ...req.query,
     numberOrder: numberOrder && Number(numberOrder),
   };
-  const chapter = await db.chapter.findMany({
+
+  const listChapter = await db.chapter.findMany({
     where: filter,
     include,
   });
-  res.json(chapter);
+
+  const response = await Promise.all(
+    listChapter.map(async (chapter) => {
+      const exam = await findExam(chapter.id_exam);
+      return { ...chapter, exam };
+    })
+  );
+
+  res.json(response);
 };
 
 export const update = async (req: Request, res: Response) => {

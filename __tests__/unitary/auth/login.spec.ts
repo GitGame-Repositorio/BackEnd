@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
-import { db } from "../../../src/db";
+import { db } from "../../../src/database/postgres";
 import { expectUser } from "./configTestsAuth";
 import { login } from "../../../src/controller/auth/auth";
 import { msgIsMissing } from "../../../src/services/objError";

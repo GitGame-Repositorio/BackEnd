@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { LevelProgress, Privilegies } from "@prisma/client";
-import { db } from "../../db";
+import { Privilegies } from "@prisma/client";
+import { db } from "../../database/postgres";
 import { unauthorizedError } from "../../services/objError";
 
-const include = { orderLevel: true, levelProgress: true };
+const include = { content: true, levelProgress: true };
 
 export const handleAccessUser = async (
   req: Request,
@@ -66,15 +66,17 @@ export const handleAccessAdmin = async (
 };
 
 export const create = async (req: Request, res: Response) => {
-  const { id, id_order_level, id_level_progress, complete } = req.body;
+  const { id, id_content, id_level_progress, complete } = req.body;
   const id_user = req.userId;
 
-  const orderLevel = await db.orderLevel.findUnique({
-    where: { id: id_order_level },
+  const content = await db.content.findUnique({
+    where: { id: id_content },
     include: { level: { include: { chapter: true } } },
   });
 
-  const { id_chapter } = orderLevel.level;
+  const { id_chapter } = content.level;
+
+  console.log(content)
 
   const chProgress = await db.chapterProgress.findFirst({
     where: { id_chapter, id_user },
@@ -83,7 +85,7 @@ export const create = async (req: Request, res: Response) => {
   const lvProgress = await db.levelProgress.findFirst({
     where: {
       id_chapter_progress: chProgress?.id || "",
-      id_level: orderLevel.id_level,
+      id_level: content.id_level,
     },
   });
 
@@ -91,15 +93,15 @@ export const create = async (req: Request, res: Response) => {
     data: {
       id,
       complete,
-      orderLevel: {
-        connect: { id: id_order_level },
+      content: {
+        connect: { id: id_content },
       },
       levelProgress: {
         connectOrCreate: {
           create: {
             level: {
               connect: {
-                id: orderLevel.id_level,
+                id: content.id_level,
               },
             },
             chapterProgress: {
@@ -121,65 +123,6 @@ export const create = async (req: Request, res: Response) => {
 
   res.status(201).json(contentProgress);
 };
-
-// export const create = async (req: Request, res: Response) => {
-//   const { id, id_order_level, id_level_progress, complete } = req.body;
-//   const id_user = req.userId;
-
-//   const orderLevel = await db.orderLevel.findUniqueOrThrow({
-//     where: { id: id_order_level },
-//     include: { level: true },
-//   });
-
-//   const chapterProgress =
-//     id_level_progress &&
-//     (await db.chapterProgress.findFirst({
-//       where: {
-//         id_user,
-//         levelProgress: {
-//           some: { contentProgress: { some: { id_order_level } } },
-//         },
-//       },
-//       include: { levelProgress: { include: { contentProgress: true } } },
-//     }));
-
-//     console.log(chapterProgress)
-
-//   const chProgress =
-//     !chapterProgress &&
-//     (await db.chapterProgress.create({
-//       data: { id_chapter: orderLevel.level.id_chapter, id_user },
-//     }));
-
-//   console.log(chProgress)
-
-//   // const lvProgress =
-//   //   !levelProgress &&
-//   //   (await db.levelProgress.create({
-//   //     data: {
-//   //       id_level: orderLevel.id_level,
-//   //       id_chapter_progress:
-//   //         levelProgress?.id_chapter_progress || chProgress?.id,
-//   //     },
-//   //   }));
-
-//   // console.log(id_level_progress);
-//   // console.log(levelProgress);
-//   // console.log(lvProgress);
-
-//   // const contentProgress = await db.contentProgress.create({
-//   //   data: {
-//   //     id,
-//   //     complete,
-//   //     id_order_level,
-//   //     id_level_progress:
-//   //       id_level_progress || levelProgress?.id || lvProgress?.id,
-//   //   },
-//   // });
-
-//   // res.status(201).json(contentProgress);
-//   res.status(201).json(chProgress);
-// };
 
 export const getById = async (req: Request, res: Response) => {
   const { id } = req.params;

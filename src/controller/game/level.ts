@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Level, Privilegies } from "@prisma/client";
-import { db } from "../../db";
+import { db } from "../../database/postgres";
 
 export const handleAccess = async (
   req: Request,
@@ -29,12 +29,7 @@ export const getById = async (req: Request, res: Response) => {
     where: { id },
     include: {
       chapter: true,
-      orderLevel: {
-        include: {
-          activity: true,
-          subject: true,
-        },
-      },
+      content: true,
     },
   });
   res.json(level);

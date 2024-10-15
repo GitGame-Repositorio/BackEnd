@@ -1,7 +1,7 @@
 import { Privilegies } from "@prisma/client";
 import bcrypt from "bcrypt";
 
-import { db } from "../../../src/db";
+import { db } from "../../../src/database/postgres";
 import { expectUser, expectUserObj } from "./configTestsAuth";
 import { mockRes, randomEmail, testIdInvalid, testIdNull } from "../config";
 

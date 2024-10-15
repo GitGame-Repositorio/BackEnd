@@ -1,4 +1,4 @@
-import { db } from "../db";
+import { db } from "../database/postgres";
 
 const truncNum = (num, limit = 2) => parseFloat(num.toFixed(limit));
 
@@ -14,7 +14,7 @@ export const playerStatistics = async () => {
     distinct: "id_user",
     where: {
       id_chapter: { in: listIdChapters },
-      exam_complete: true,
+      examComplete: true,
     },
   });
 
@@ -86,9 +86,8 @@ export const levelStatistics = async ({ id_chapter }) => {
 
 export const contentStatistics = async ({ id_level }) => {
   const countUser = (await db.userLogged.count()) || 0;
-  const allRecords = await db.orderLevel.findMany({
+  const allRecords = await db.content.findMany({
     where: { id_level },
-    include: { activity: { include: { assessment: true } }, subject: true },
   });
   const allObjProgCompleat = await db.contentProgress.findMany({
     include: {
@@ -99,11 +98,11 @@ export const contentStatistics = async ({ id_level }) => {
       },
     },
     where: { complete: true },
-    distinct: "id_order_level",
+    distinct: "id",
   });
-  return allRecords.map((obj) => {
+  return allRecords.map((content) => {
     const objChProgress = allObjProgCompleat.find(
-      (progress) => progress.id_order_level === obj.id
+      (progress) => progress.id === content.id
     );
     const countUserCompleat: number =
       Number(objChProgress?.levelProgress._count) || 0;
@@ -111,9 +110,7 @@ export const contentStatistics = async ({ id_level }) => {
     const percentUserCompleat = truncNum(
       (countUserCompleat * 100) / countUserNotCompleat
     );
-    const content = obj.subject[0] || obj.activity[0].assessment;
     return {
-      ...obj,
       ...content,
       timeForCompleat: "1h32min",
       countUserNotCompleat,

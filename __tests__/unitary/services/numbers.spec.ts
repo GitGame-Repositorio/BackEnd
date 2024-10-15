@@ -1,7 +1,7 @@
-import { db } from "../../../src/db";
-import { generateNumber, nextOrderLevel } from "../../../src/services/numbers";
+import { db } from "../../../src/database/postgres";
+import { generateNumber, nextContentID } from "../../../src/services/numbers";
 
-describe("nextOrderLevel", () => {
+describe("nextContentID", () => {
   const id_level = "027c2792-0573-4e5a-a9b5-a065b7987ce6";
 
   const createMock = (numberOrder: number) => {
@@ -13,7 +13,7 @@ describe("nextOrderLevel", () => {
   it("should return 1 when no orders exist for given id_level", async () => {
     const spy = createMock(0);
 
-    const result = await nextOrderLevel(id_level);
+    const result = await nextContentID(id_level);
     expect(result).toBe(1);
 
     spy.mockRestore();
@@ -23,7 +23,7 @@ describe("nextOrderLevel", () => {
   it("should return incremented order level when orders exist for given id_level", async () => {
     const spy = createMock(2);
 
-    const result = await nextOrderLevel(id_level);
+    const result = await nextContentID(id_level);
     expect(result).toBe(3);
 
     spy.mockRestore();
@@ -33,7 +33,7 @@ describe("nextOrderLevel", () => {
   it("should return count + 1 when orders exist for given id_level", async () => {
     const spy = createMock(3);
 
-    const result = await nextOrderLevel(id_level);
+    const result = await nextContentID(id_level);
     expect(result).toBe(4);
 
     spy.mockRestore();
@@ -42,7 +42,7 @@ describe("nextOrderLevel", () => {
   // throws an error when id_level is not in valid UUID string format
   it("should throw an error when id_level is not in valid UUID string format", async () => {
     const invalidIdLevel = "invalid_id_level";
-    await expect(nextOrderLevel(invalidIdLevel)).rejects.toThrow(
+    await expect(nextContentID(invalidIdLevel)).rejects.toThrow(
       new Error("No Level found")
     );
   });
@@ -51,7 +51,7 @@ describe("nextOrderLevel", () => {
   it("should correctly increment order level count by a large value", async () => {
     const spy = createMock(999999);
 
-    const result = await nextOrderLevel(id_level);
+    const result = await nextContentID(id_level);
     expect(result).toBe(1000000);
 
     spy.mockRestore();

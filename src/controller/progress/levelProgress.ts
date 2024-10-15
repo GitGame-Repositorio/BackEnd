@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Privilegies, LevelProgressWhereInput } from "@prisma/client";
 import { unauthorizedError } from "../../services/objError";
-import { db } from "../../db";
+import { db } from "../../database/postgres";
 
 const include = { level: true, chapterProgress: true, contentProgress: true };
 

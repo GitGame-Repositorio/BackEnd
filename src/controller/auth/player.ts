@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Privilegies, UserWork } from "@prisma/client";
 import bcrypt from "bcrypt";
 
-import { db } from "../../db";
+import { db } from "../../database/postgres";
 
 const include = {
   user: { include: { userWork: true } },

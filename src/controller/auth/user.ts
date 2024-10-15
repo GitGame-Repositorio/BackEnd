@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { db } from "../../db";
+import { db } from "../../database/postgres";
 import { validateEmail, validatePassword } from "../../services/validate";
 import { UserWork } from "@prisma/client";
 

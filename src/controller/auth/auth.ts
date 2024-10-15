@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 
 import { validateEmail, validatePassword } from "../../services/validate";
 import { JWT_SECRET } from "../../env";
-import { db } from "../../db";
+import { db } from "../../database/postgres";
 
 export const register = async (req: Request, res: Response) => {
   const { email, password } = req.body;

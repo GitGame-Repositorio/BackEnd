@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Privilegies } from "@prisma/client";
-import { db } from "../../db";
+import { db } from "../../database/postgres";
 
 const include = {
   user: { include: { userLogged: true } },
