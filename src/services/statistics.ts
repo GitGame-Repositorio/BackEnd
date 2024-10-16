@@ -76,7 +76,7 @@ export const levelStatistics = async ({ id_chapter }) => {
     );
     return {
       ...obj,
-      timeForCompleat: "1h32min",
+      timeForCompleat: "10min",
       countUserNotCompleat,
       percentUserCompleat,
       countUserCompleat,
@@ -106,13 +106,14 @@ export const contentStatistics = async ({ id_level }) => {
     );
     const countUserCompleat: number =
       Number(objChProgress?.levelProgress._count) || 0;
+
     const countUserNotCompleat = countUser - countUserCompleat;
     const percentUserCompleat = truncNum(
       (countUserCompleat * 100) / countUserNotCompleat
     );
     return {
       ...content,
-      timeForCompleat: "1h32min",
+      timeForCompleat: "1min",
       countUserNotCompleat,
       percentUserCompleat,
       countUserCompleat,

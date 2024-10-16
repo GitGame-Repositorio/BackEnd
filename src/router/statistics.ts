@@ -11,8 +11,7 @@ export const router = express.Router();
 router
   .route("/progress/me")
   .post(authorization, progress.generateProgress)
-  .get(authorization,  progress.generateProgress);
-  // .get(authorization, progress.getProgress, progress.generateProgress);
+  .get(authorization, progress.getProgress, progress.generateProgress);
 
 router.get(
   "/statistics/allPlayers",
