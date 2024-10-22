@@ -1,6 +1,3 @@
-import { ObjectId } from "mongodb";
-import { convertID } from "../../../src/services/mongoCRUD";
-
 const { mongo, client: clientMongo } = require("../../../src/database/mongo");
 const { db: prisma } = require("../../../src/database/postgres");
 
