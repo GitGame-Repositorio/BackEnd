@@ -21,6 +21,13 @@ router.get(
 );
 
 router.get(
+  "/statistics/dashboard",
+  authorization,
+  verifyPermission,
+  statistics.dashboardStats
+);
+
+router.get(
   "/statistics/chapter",
   authorization,
   verifyPermission,

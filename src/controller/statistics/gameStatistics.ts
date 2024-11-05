@@ -2,12 +2,18 @@ import { Request, Response } from "express";
 import {
   chapterStatistics,
   contentStatistics,
+  dashboardStatistics,
   levelStatistics,
   playerStatistics,
 } from "../../services/statistics";
 
 export const playerStats = async (req: Request, res: Response) => {
   const result = await playerStatistics();
+  res.json(result);
+};
+
+export const dashboardStats = async (req: Request, res: Response) => {
+  const result = await dashboardStatistics();
   res.json(result);
 };
 

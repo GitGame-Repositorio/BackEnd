@@ -120,3 +120,12 @@ export const contentStatistics = async ({ id_level }) => {
     };
   });
 };
+
+export const dashboardStatistics = async () => {
+  const report = await db.reports.count({
+    where: { NOT: { status: "REMOVED" } },
+  });
+  const player = await db.userLogged.count();
+  const admin = await db.admin.count();
+  return { report, player, admin };
+};
